@@ -1,4 +1,6 @@
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GenderDao {
 
@@ -27,19 +29,27 @@ public class GenderDao {
 
     }
 
-   
+    public static List<Gender> getAll() {
+
+        List<Gender> genders = new ArrayList<>();
+
+        try {
+            String qry = "Select * from gender";
+            ResultSet rslt =CommonDao.get(qry);
+
+            while (rslt.next()) {
+                Gender gender = new Gender();
+                gender.setId(rslt.getInt("id"));
+                gender.setName(rslt.getString("name"));
+
+                genders.add(gender);
+            }
+        }catch (Exception e) {
+
+            System.out.println("Can't Connect As :"+ e.getMessage());
+        }
+
+        return genders;
+
+    }
 }
-
-
-
-
-        
-
-        
-    
-        
-
-    
-
-
-
