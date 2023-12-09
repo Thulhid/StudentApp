@@ -11,11 +11,14 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
+import java.awt.Color;
 
 public class StudentUi extends JFrame {
 
@@ -23,6 +26,9 @@ public class StudentUi extends JFrame {
     JComboBox cmb;
     JTextField txt;
     Vector<Object> columns;
+    JComboBox cmbSv;
+    JTextField nameSv;
+    JTextField nicSv;
 
     StudentUi() {
 
@@ -36,9 +42,19 @@ public class StudentUi extends JFrame {
         columns.add("Gender");
 
         cmb = new JComboBox<>();
+        JLabel cmbLable = new JLabel("Search Gender");
         txt = new JTextField(10);
+        JLabel txtLable = new JLabel("Search Name");
         JButton btnSearch = new JButton("Search");
         JButton btnClear = new JButton("Clear");
+
+        JLabel nameSaveLable = new JLabel("Name");
+        nameSv = new JTextField(10);
+        JLabel nicSvLable = new JLabel("NIC");
+        nicSv = new JTextField(10);
+        JLabel genderSvLable = new JLabel("Gender");
+        cmbSv = new JComboBox<>();
+        JButton btnSvAdd = new JButton("Add");
 
         tblStudent = new JTable();
         DefaultTableModel tblModel = new DefaultTableModel(null, columns);
@@ -51,9 +67,19 @@ public class StudentUi extends JFrame {
         jspTable.setPreferredSize(new Dimension(450, 180));
         jspTable.setViewportView(tblStudent);
 
+        con.add(nameSaveLable);
+        con.add(nameSv);
+        con.add(nicSvLable);
+        con.add(nicSv);
+        con.add(genderSvLable);
+        con.add(cmbSv);
+        con.add(btnSvAdd);
+
+        con.add(txtLable);
         con.add(txt);
         con.add(btnSearch);
         con.add(btnClear);
+        con.add(cmbLable);
         con.add(cmb);
         con.add(jspTable);
 
@@ -67,6 +93,12 @@ public class StudentUi extends JFrame {
         btnClear.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 btnClearSearchAp(e);
+            }
+        });
+
+        btnSvAdd.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                btnSvAddAp(e);
             }
         });
 
@@ -91,7 +123,9 @@ public class StudentUi extends JFrame {
         }
 
         DefaultComboBoxModel<Object> genModel = new DefaultComboBoxModel<Object>(genders);
+
         cmb.setModel(genModel);
+        cmbSv.setModel(genModel);
 
     }
 
@@ -160,6 +194,67 @@ public class StudentUi extends JFrame {
 
             List<Student> employees = StudentController.get(null);
             fillTable(employees);
+        }
+
+    }
+
+    public void btnSvAddAp(ActionEvent e) {
+        // System.out.println("Test-OK");
+        String error = "";
+
+        String name = nameSv.getText();
+        Object gen = cmbSv.getSelectedItem();
+        String nic = nicSv.getText();
+
+        Student student = new Student();
+
+        if (name.matches("^[A-Z][a-z]*$")) {
+            nameSv.setBackground(Color.GREEN);
+            student.setName(name);
+        }
+
+        else {
+            nameSv.setBackground(Color.PINK);
+            error = error + "Invalid student name\n";
+        }
+
+        if (nic.matches("[0-9]{9}V$")) {
+            nicSv.setBackground(Color.GREEN);
+            student.setNic(nic);
+        }
+
+        else {
+            nicSv.setBackground(Color.PINK);
+            error = error + "Invalid student nic\n";
+        }
+
+        if (gen != "Select a Gender") {
+            cmbSv.setBackground(Color.GREEN);
+            student.setgender((Gender) cmbSv.getSelectedItem());
+        }
+
+        else {
+            cmbSv.setBackground(Color.PINK);
+            error = error + "Invalid student Gender\n";
+        }
+
+        if (error.isEmpty()) {
+            int msg = JOptionPane.showConfirmDialog(null,
+                    "Are you Sure to Save?\n" + "Name -" + name + "\n" + "Nic -" + nic + "\n" + "Gender" + gen + "\n");
+
+            if (msg == 0) {
+
+                String st = StudentController.post(student);
+                JOptionPane.showMessageDialog(null, "Successfully Saved");
+
+            }
+
+        }
+
+        else {
+
+            JOptionPane.showMessageDialog(null, "Your in Error" + "\n" + error);
+
         }
 
     }

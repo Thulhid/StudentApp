@@ -22,4 +22,30 @@ public class CommonDao {
         return rs;
 
     }
+
+    public static String modify(String quary) {
+
+        String msg = "0";
+
+        try {
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/students", "root", "90896262");
+            Statement st = con.createStatement();
+            int row = st.executeUpdate(quary);
+
+            if (row != 0)
+                msg = "1";
+
+            else {
+                msg = "DB Error";
+            }
+
+        } catch (Exception e) {
+            System.out.println("Can't Connect as :" + e.getMessage());
+
+        }
+
+        return msg;
+    }
+
 }
