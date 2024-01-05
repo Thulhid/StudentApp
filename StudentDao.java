@@ -2,6 +2,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class StudentDao {
 
     private static List<Student> get(String quary) {
@@ -59,4 +61,47 @@ public class StudentDao {
         List<Student> students = get(qry);
         return students;
     }
+
+    public static Student getByNic(String nic) {
+
+        Student student = null;
+
+        try {
+
+            String quary = "Select * from student where nic='" + nic + "'";
+            ResultSet rslt = CommonDao.get(quary);
+
+            if (rslt.next() && rslt != null) {
+
+                student = new Student();
+                student.setId(rslt.getInt("id"));
+                student.setName(rslt.getString("name"));
+                student.setNic(rslt.getString("nic"));
+
+                student.setgender(GenderDao.getbyId(rslt.getInt("gender_id")));
+
+            }
+        } catch (Exception e) {
+            System.out.println("Can't Connect as : " + e.getMessage());
+        }
+
+        return student;
+
+    }
+
+    public static String save(Student student) {
+
+        String msg = "";
+
+        String quary = "INSERT INTO student(name,nic,gender_id) values ('"
+                + student.getName() + "','"
+                + student.getNic() + "',"
+                + student.getGender().getId() + ")";
+        // System.out.println(quary);
+
+        msg = CommonDao.modify(quary);
+
+        return msg;
+    }
+
 }
