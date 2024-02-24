@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.Color;
@@ -25,6 +27,7 @@ public class StudentUi extends JFrame {
     Color valid;
     Color invalid;
     Color initial;
+    Color update;
 
     JTable tblStudent;
     JComboBox cmb;
@@ -37,7 +40,16 @@ public class StudentUi extends JFrame {
     JButton btnUpdate;
     JButton btnDelete;
 
+    List<Student> stlist;
+    Student oldStudent;
+    List<Gender> genlist;
+    Student student;
+
     StudentUi() {
+         valid = Color.GREEN;
+        invalid = Color.PINK;
+        initial = Color.WHITE;
+        update = Color.YELLOW;
 
         setTitle("Student Detail Management");
         setSize(500, 300);
@@ -121,6 +133,20 @@ public class StudentUi extends JFrame {
             }
         });
 
+        tblStudent.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e){
+                tblStudentVc(e);
+            }
+        });
+
+        btnUpdate.addActionListener( new ActionListener() {
+        public void actionPerformed(ActionEvent e){
+            btnUpdateAp(e);
+        }
+    
+    
+    });
+
         initialize();
 
     }
@@ -131,14 +157,14 @@ public class StudentUi extends JFrame {
     }
 
     public void loadView() {
-        List<Student> stlist = StudentController.get(null);
+         stlist = StudentController.get(null);
         fillTable(stlist);
 
-        List<Gender> gendlist = GenderController.get();
+        List<Gender> genlist = GenderController.get();
         Vector<Object> genders = new Vector<>();
         genders.add("Select a Gender");
 
-        for (Gender gen : gendlist) {
+        for (Gender gen : genlist) {
             genders.add(gen);
         }
 
@@ -150,11 +176,11 @@ public class StudentUi extends JFrame {
     }
 
     public void LoadForm(){
-        List<Gender> gendlist = GenderController.get();
+        genlist = GenderController.get();
         Vector<Object> genders = new Vector<Object>();
         genders.add("Select a Gender");
 
-        for (Gender gen : gendlist) {
+        for (Gender gen : genlist) {
             genders.add(gen);
         }
         DefaultComboBoxModel<Object> genModel = new DefaultComboBoxModel<Object>(genders);
@@ -233,17 +259,15 @@ public class StudentUi extends JFrame {
             txt.setText("");
             cmb.setSelectedIndex(0);
 
-            List<Student> employees = StudentController.get(null);
-            fillTable(employees);
+            List<Student> students = StudentController.get(null);
+            fillTable(students);
         }
 
     }
 
     public void btnSvAddAp(ActionEvent e) {
 
-        valid = Color.GREEN;
-        invalid = Color.PINK;
-        initial = Color.WHITE;
+       
         // System.out.println("Test-OK");
         String error = "";
 
@@ -275,7 +299,7 @@ public class StudentUi extends JFrame {
 
         if (gen != "Select a Gender") {
             cmbSv.setBackground(valid);
-            student.setgender((Gender) cmbSv.getSelectedItem());
+            student.setGender((Gender) cmbSv.getSelectedItem());
         }
 
         else {
@@ -328,4 +352,150 @@ public class StudentUi extends JFrame {
 
 }
 
+ public void tblStudentVc(ListSelectionEvent e) {
+       // System.out.println("Test - Ok");
+
+        int row = tblStudent.getSelectedRow();
+
+        if (row > -1) {
+            Student student = stlist.get(row);
+            fillForm(student);
+        }
+    }
+
+    public void fillForm(Student student) {
+
+        oldStudent = student;
+
+        nameSv.setText(student.getName());
+        nicSv.setText(student.getNic());
+
+        for (Gender gen : genlist) {
+            if (gen.equals(student.getGender())) {
+                cmbSv.setSelectedItem(gen);
+                break;
+            }
+        }
+
+        enbaleButtons(false, true, true);
+        setStyle(valid);
+
+    }
+
+    public void btnUpdateAp(ActionEvent e) {
+
+        // System.out.println("Test-OK");
+
+    //     String errors = getErrors();
+    //     student.setId(oldStudent.getId());
+
+    //     if (errors.isEmpty()) {
+    //         String updates = getUpdate();
+    //         if (!updates.isEmpty()) {
+
+    //             int op = JOptionPane.showConfirmDialog(null,
+    //                     "Are You Sure to Update Following student\n\n" + updates);
+    //             if (op == 0) {
+    //                 String sts = StudentController.put(student);
+    //                 if (sts.equals("1")) {
+    //                     JOptionPane.showMessageDialog(null, "Successfully Updated..!");
+    //                     LoadForm();
+    //                     loadView();
+    //                 } else {
+    //                     JOptionPane.showMessageDialog(null, "Faild to Update as" + sts);
+    //                 }
+    //             }
+
+    //         } else {
+    //             JOptionPane.showMessageDialog(null, "Nothing to Update");
+    //         }
+
+    //     } else {
+    //         JOptionPane.showMessageDialog(null, "You have Following Errors" + errors);
+    //     }
+
+    // }
+    String errors = "";
+    String updates = "";
+
+    Student student = new Student();
+    student.setId(oldStudent.getId());
+
+    String name = nameSv.getText();
+    if (name.matches("^[A-Z][a-z]*$")) {
+        student.setName(name);
+        if (!student.getName().equals(oldStudent.getName())) {
+            nameSv.setBackground(update);
+             updates = updates + "Name Updated" + student.getName();
+
+        } else {
+            nameSv.setBackground(valid);
+        }
+
+    } else {
+        errors = errors + "Invalid Name";
+        nameSv.setBackground(invalid);
+    }
+
+    String nic = nicSv.getText();
+    if (nic.matches("^[0-9]{9}V$")) {
+        student.setNic(nic);
+        if (!student.getNic().equals(oldStudent.getNic())) {
+            nicSv.setBackground(update);
+            updates = updates + "NIC Updated" + student.getNic();
+        } else {
+            nicSv.setBackground(valid);
+        }
+    } else {
+        errors = errors + "\nInvalid NIC";
+        nicSv.setBackground(invalid);
+    }
+
+    int sitem = cmbSv.getSelectedIndex();
+    if (sitem != 0) {
+        student.setGender((Gender) cmbSv.getSelectedItem());
+        if (!student.getGender().equals(oldStudent.getGender())) {
+            cmbSv.setBackground(update);
+            updates = updates + "Gender Updated" + student.getGender().getName();
+        } else {
+            cmbSv.setBackground(valid);
+        }
+    } else {
+        errors = errors + "\nInvalid Gender";
+        cmbSv.setBackground(invalid);
+    }
+
+    if (errors.isEmpty()) {
+
+        if (!updates.isEmpty()) {
+
+       
+            int op = JOptionPane.showConfirmDialog(null,
+                    "Are You Sure to Update Following student\n\n" + "Name -" + name + "\n" + "Nic -" + nic + "\n" + "Gender -" + cmbSv.getSelectedItem() + "\n");
+            if (op == 0) {
+                String sts = StudentController.put(student);
+                if (sts.equals("1")) {
+                    JOptionPane.showMessageDialog(null, "Successfully Updated..!");
+                    LoadForm();
+                    loadView();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Faild to Update as" + sts);
+                }
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Nothing to Update");
+        }
+
+    } else {
+        JOptionPane.showMessageDialog(null, "You have Following Errors" + errors);
+    }
+
+    
+
+
+    
+
+
+}
 }

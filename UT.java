@@ -210,7 +210,7 @@ student.setgender(GenderDao.getbyId(1));
 String msg = StudentController.post(student);
 System.out.println(msg);*/
 
-// ===With New NIC===
+// =======With New NIC=======
 
 // Student student = new Student();
 // student.setName("Boralu");
@@ -219,6 +219,37 @@ System.out.println(msg);*/
 
 // String msg = StudentController.post(student);
 //  System.out.println(msg);
+
+
+ // ============== Update ->name============
+        // Student Student = StudentDao.getByNIC("123456789V");
+        // Student.setName("Ahinsa");
+
+        // String msg = StudentController.put(Student);
+        // System.out.println(msg);
+
+        // ============== Update ->Nic to Exsisting Nic============
+       // Student student = StudentDao.getByNic("123456789123");
+       // student.setNic("376501293763");
+
+        //String msg = StudentController.put(student);
+        //System.out.println(msg);
+
+        // ============== Update ->Nic to New Nic============
+        // Student student = StudentDao.getByNic("123456789V");
+        // student.setNic("");
+
+        // String msg = StudentController.put(student);
+        // System.out.println(msg);
+
+        // ============== Update ->Gender============
+        // Student student = StudentDao.getByNic("123456789V");
+        // student.setName("");
+        // student.setGender(GenderDao.getById(1));
+
+        // String msg = StudentController.put(student);
+        // System.out.println(msg);
+
 
 
 

@@ -55,4 +55,26 @@ public class StudentController {
         }
         return msg;
     }
+
+    public static String put(Student student) {
+
+        String msg = "";
+        String error = "";
+
+        Student st = StudentDao.getByNic(student.getNic());
+
+        if (st != null && st.getId() != student.getId())
+            error = error + "Existing NIC";
+
+        if (error.isEmpty()) {
+            String dberr = StudentDao.update(student);
+            if (dberr.equals("1"))
+                msg = "1";
+            else
+                msg = dberr;
+        } else {
+            msg = "Data Error/n" + error;
+        }
+        return msg;
+    }
 }

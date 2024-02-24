@@ -18,7 +18,7 @@ public class StudentDao {
                 student.setId(rs.getInt("id"));
                 student.setName(rs.getString("name"));
                 student.setNic(rs.getString("nic"));
-                student.setgender(GenderDao.getbyId(rs.getInt("gender_id")));
+                student.setGender(GenderDao.getbyId(rs.getInt("gender_id")));
 
                 students.add(student);
 
@@ -78,7 +78,7 @@ public class StudentDao {
                 student.setName(rslt.getString("name"));
                 student.setNic(rslt.getString("nic"));
 
-                student.setgender(GenderDao.getbyId(rslt.getInt("gender_id")));
+                student.setGender(GenderDao.getbyId(rslt.getInt("gender_id")));
 
             }
         } catch (Exception e) {
@@ -103,5 +103,28 @@ public class StudentDao {
 
         return msg;
     }
+
+    public static String update(Student student) {
+
+        String msg = "Can't Connect Database";
+
+        String qry = "UPDATE student SET name ='" +
+                student.getName() + "',nic='" +
+                student.getNic() + "',gender_id=" +
+                student.getGender().getId() +
+                " WHERE id=" + student.getId();
+
+        // INSERT INTO employee (name,nic,gender_id) values('"
+        // Kamal','
+        // 2004344126740',
+        // 1);
+
+        // System.out.println(qry);
+
+        msg = CommonDao.modify(qry);
+
+        return msg;
+
+}
 
 }

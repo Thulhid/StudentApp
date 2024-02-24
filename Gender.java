@@ -25,7 +25,9 @@ public class Gender {
     public String toString() {
         return name;
     }
-
+public boolean equals(Gender obj) {
+    return obj.id==this.id;
+}
 
 
 }
