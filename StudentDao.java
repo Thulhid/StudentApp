@@ -114,7 +114,7 @@ public class StudentDao {
                 student.getGender().getId() +
                 " WHERE id=" + student.getId();
 
-        // INSERT INTO employee (name,nic,gender_id) values('"
+        // INSERT INTO student (name,nic,gender_id) values('"
         // Kamal','
         // 2004344126740',
         // 1);
@@ -125,6 +125,16 @@ public class StudentDao {
 
         return msg;
 
+}
+
+public static String delete(Student student) {
+
+    String msg = "Can't Connect Database";
+
+    String qry = "DELETE FROM student WHERE id=" + student.getId();
+    msg = CommonDao.modify(qry);
+
+    return msg;
 }
 
 }

@@ -144,7 +144,12 @@ public class StudentUi extends JFrame {
             btnUpdateAp(e);
         }
     
-    
+    });
+
+    btnDelete.addActionListener( new ActionListener() {
+        public void actionPerformed(ActionEvent e){
+           btnDeleteAp(e);
+        }
     });
 
         initialize();
@@ -384,37 +389,7 @@ public class StudentUi extends JFrame {
 
     public void btnUpdateAp(ActionEvent e) {
 
-        // System.out.println("Test-OK");
-
-    //     String errors = getErrors();
-    //     student.setId(oldStudent.getId());
-
-    //     if (errors.isEmpty()) {
-    //         String updates = getUpdate();
-    //         if (!updates.isEmpty()) {
-
-    //             int op = JOptionPane.showConfirmDialog(null,
-    //                     "Are You Sure to Update Following student\n\n" + updates);
-    //             if (op == 0) {
-    //                 String sts = StudentController.put(student);
-    //                 if (sts.equals("1")) {
-    //                     JOptionPane.showMessageDialog(null, "Successfully Updated..!");
-    //                     LoadForm();
-    //                     loadView();
-    //                 } else {
-    //                     JOptionPane.showMessageDialog(null, "Faild to Update as" + sts);
-    //                 }
-    //             }
-
-    //         } else {
-    //             JOptionPane.showMessageDialog(null, "Nothing to Update");
-    //         }
-
-    //     } else {
-    //         JOptionPane.showMessageDialog(null, "You have Following Errors" + errors);
-    //     }
-
-    // }
+ 
     String errors = "";
     String updates = "";
 
@@ -496,6 +471,25 @@ public class StudentUi extends JFrame {
 
     
 
+
+}
+
+public void btnDeleteAp(ActionEvent e) {
+    // System.out.println("Test-OK");
+
+    int op = JOptionPane.showConfirmDialog(null,
+            "Are You Sure to Delete Follwoing Student?" + "\n"+oldStudent.getName());
+
+    if (op == 0) {
+        String sts = StudentController.delete(oldStudent);
+        if (sts.equals("1")) {
+            JOptionPane.showMessageDialog(null, "Successfully Deleted..!");
+            LoadForm();
+            loadView();
+        } else {
+            JOptionPane.showMessageDialog(null, "Faild to Delete as" + sts);
+        }
+    }
 
 }
 }

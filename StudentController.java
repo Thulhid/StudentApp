@@ -77,4 +77,21 @@ public class StudentController {
         }
         return msg;
     }
+
+    public static String delete(Student student) {
+
+        String errors = "";
+        String msg = "";
+
+        String sts = StudentDao.delete(student);
+        if (sts.equals("1")) {
+            msg = sts;
+        } else {
+            errors = errors + sts;
+            msg = errors;
+        }
+
+        return msg;
+
+    }
 }

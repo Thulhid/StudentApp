@@ -250,6 +250,13 @@ System.out.println(msg);*/
         // String msg = StudentController.put(student);
         // System.out.println(msg);
 
+        // ============== Delete ->============
+       Student student = StudentDao.getByNic("909090908V");
+        //student.setName("Nimal");
+
+        String msg = StudentController.delete(student);
+       System.out.println(msg);
+
 
 
 
