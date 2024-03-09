@@ -22,7 +22,7 @@ public class GenderDao {
         } catch (Exception e) {
 
             System.out.println("Can't Connect as  :" + e.getMessage());
-
+            System.out.println("hashi");
         }
 
         return null;
