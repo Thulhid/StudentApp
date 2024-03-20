@@ -218,7 +218,7 @@ public class StudentUi extends JFrame {
 
     public void fillTable(List<Student> stlist) {
 
-        Vector<Object> data = new Vector<>();
+        Vector data = new Vector<>();
 
         for (Student st : stlist) {
             Vector row = new Vector<>();
